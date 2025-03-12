@@ -51,7 +51,7 @@ export function App() {
         <hr className="RampBreak--l" />
 
         <InputSelect<Employee>
-          isLoading={isLoading}
+          isLoading={employees === null ? true : false} // fixes bug 5 part 1 & 2
           defaultValue={EMPTY_EMPLOYEE}
           items={employees === null ? [] : [EMPTY_EMPLOYEE, ...employees]}
           label="Filter by employee"
@@ -77,8 +77,8 @@ export function App() {
 
         <div className="RampGrid">
           <Transactions transactions={transactions} />
-
-          {transactions !== null && (
+          {/* next line fixes bug 6 parts 1 and 2 */}
+          {transactions !== null && paginatedTransactions?.nextPage && (
             <button
               className="RampButton"
               disabled={paginatedTransactionsUtils.loading}

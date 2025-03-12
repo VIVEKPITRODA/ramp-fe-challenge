@@ -5,7 +5,7 @@ import { TransactionPane } from "./TransactionPane"
 import { SetTransactionApprovalFunction, TransactionsComponent } from "./types"
 
 export const Transactions: TransactionsComponent = ({ transactions }) => {
-  const { fetchWithoutCache, loading } = useCustomFetch()
+  const { fetchWithoutCache, loading, clearCacheByEndpoint } = useCustomFetch()
 
   const setTransactionApproval = useCallback<SetTransactionApprovalFunction>(
     async ({ transactionId, newValue }) => {
@@ -13,6 +13,7 @@ export const Transactions: TransactionsComponent = ({ transactions }) => {
         transactionId,
         value: newValue,
       })
+      clearCacheByEndpoint(["transactionsByEmployee", "paginatedTransactions"]) // fixes bug 7
     },
     [fetchWithoutCache]
   )
@@ -23,14 +24,16 @@ export const Transactions: TransactionsComponent = ({ transactions }) => {
 
   return (
     <div data-testid="transaction-container">
-      {transactions.map((transaction) => (
-        <TransactionPane
-          key={transaction.id}
-          transaction={transaction}
-          loading={loading}
-          setTransactionApproval={setTransactionApproval}
-        />
-      ))}
+      {transactions.map((transaction) => {
+        return (
+          <TransactionPane
+            key={transaction.id}
+            transaction={transaction}
+            loading={loading}
+            setTransactionApproval={setTransactionApproval}
+          />
+        )
+      })}
     </div>
   )
 }
